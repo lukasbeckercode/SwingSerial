@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_swingserial" default="compile.module.swingserial">
+  <dirname property="module.swingserial.basedir" file="${ant.file.module_swingserial}"/>
+  
+  <property name="module.jdk.home.swingserial" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.swingserial" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.swingserial" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.swingserial" value="-encoding UTF-8 -source 12 -target 12 ${compiler.args}"/>
+  
+  <property name="swingserial.output.dir" value="${module.swingserial.basedir}/out/production/SwingSerial"/>
+  <property name="swingserial.testoutput.dir" value="${module.swingserial.basedir}/out/test/SwingSerial"/>
+  
+  <path id="swingserial.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="swingserial.module.production.classpath">
+    <path refid="${module.jdk.classpath.swingserial}"/>
+    <path refid="library.jserialcomm-2.5.0.classpath"/>
+  </path>
+  
+  <path id="swingserial.runtime.production.module.classpath">
+    <pathelement location="${swingserial.output.dir}"/>
+    <path refid="library.jserialcomm-2.5.0.classpath"/>
+  </path>
+  
+  <path id="swingserial.module.classpath">
+    <path refid="${module.jdk.classpath.swingserial}"/>
+    <pathelement location="${swingserial.output.dir}"/>
+    <path refid="library.jserialcomm-2.5.0.classpath"/>
+  </path>
+  
+  <path id="swingserial.runtime.module.classpath">
+    <pathelement location="${swingserial.testoutput.dir}"/>
+    <pathelement location="${swingserial.output.dir}"/>
+    <path refid="library.jserialcomm-2.5.0.classpath"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.swingserial">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.swingserial">
+    <patternset refid="excluded.from.module.swingserial"/>
+  </patternset>
+  
+  <path id="swingserial.module.sourcepath">
+    <dirset dir="${module.swingserial.basedir}">
+      <include name="src"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.swingserial" depends="compile.module.swingserial.production,compile.module.swingserial.tests" description="Compile module SwingSerial"/>
+  
+  <target name="compile.module.swingserial.production" depends="register.custom.compilers" description="Compile module SwingSerial; production classes">
+    <mkdir dir="${swingserial.output.dir}"/>
+    <javac2 destdir="${swingserial.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.swingserial}/javac">
+      <compilerarg line="${compiler.args.swingserial}"/>
+      <bootclasspath refid="swingserial.module.bootclasspath"/>
+      <classpath refid="swingserial.module.production.classpath"/>
+      <src refid="swingserial.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.swingserial"/>
+    </javac2>
+    
+    <copy todir="${swingserial.output.dir}">
+      <fileset dir="${module.swingserial.basedir}/src">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.swingserial.tests" depends="register.custom.compilers,compile.module.swingserial.production" description="compile module SwingSerial; test classes" unless="skip.tests"/>
+  
+  <target name="clean.module.swingserial" description="cleanup module">
+    <delete dir="${swingserial.output.dir}"/>
+    <delete dir="${swingserial.testoutput.dir}"/>
+  </target>
+</project>
