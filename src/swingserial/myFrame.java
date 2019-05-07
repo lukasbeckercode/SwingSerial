@@ -29,10 +29,12 @@ public class myFrame extends JFrame {
     private JButton disconnectButton;
     private JTextArea textArea1;
     private JButton readDataButton;
+    private JComboBox baudRateBox;
 
     SerialPort[] portNames; //all available SerialPorts
     static SerialPort chosenPort; // the SerialPort we will work with
     PrintWriter output; // an output Streamer
+    int[] baudRates = {9600,19200,38400,57600,74880,115200,230400};
 
     public myFrame(){
         add(rootPanel); // get the Layout from the designer
@@ -41,6 +43,12 @@ public class myFrame extends JFrame {
         readSerialButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                //Common baud rates
+               for(int i = 0; i<= 6 ; i++)
+               {
+                   baudRateBox.addItem(baudRates[i]); //Add all baudRates TODO: Delete weird last entry!
+               }
+               baudRateBox.addItem(baudRates);
                  portNames = SerialPort.getCommPorts(); //Look for all available COM ports
                 for(int i = 0; i < portNames.length; ++i) {
                     comboBox1.addItem(portNames[i].getSystemPortName()); //add all of them to our combo box
@@ -53,7 +61,8 @@ public class myFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 chosenPort = SerialPort.getCommPort(comboBox1.getSelectedItem().toString()); //set the COM port we will work with
-                chosenPort.setBaudRate(9600); //Set the Baud Rate
+                int chosenBaud = ((int) baudRateBox.getSelectedItem()); // get the baudRate from the ComboBox
+                chosenPort.setBaudRate(chosenBaud); //Set the Baud Rate
                 chosenPort.setComPortTimeouts(65536,0,0); //set Timeouts
                 chosenPort.openPort(); //open the Port
                 output = new PrintWriter(chosenPort .getOutputStream() ); // Assign the output Steamer to the COM port
