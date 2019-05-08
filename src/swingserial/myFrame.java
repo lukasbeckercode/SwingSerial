@@ -46,9 +46,9 @@ public class myFrame extends JFrame {
                 //Common baud rates
                for(int i = 0; i<= 6 ; i++)
                {
-                   baudRateBox.addItem(baudRates[i]); //Add all baudRates TODO: Delete weird last entry!
+                   baudRateBox.addItem(baudRates[i]); //Add all baudRates
                }
-               baudRateBox.addItem(baudRates);
+
                  portNames = SerialPort.getCommPorts(); //Look for all available COM ports
                 for(int i = 0; i < portNames.length; ++i) {
                     comboBox1.addItem(portNames[i].getSystemPortName()); //add all of them to our combo box
