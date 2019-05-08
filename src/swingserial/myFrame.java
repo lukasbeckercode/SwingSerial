@@ -32,6 +32,7 @@ public class myFrame extends JFrame {
     private JButton readDataButton;
     private JComboBox baudRateBox;
     private JButton stopReadButton;
+    private JLabel statusLabel;
     Timer timer;   //Global Var so we can start and stop it
 
     SerialPort[] portNames; //all available SerialPorts
@@ -41,7 +42,7 @@ public class myFrame extends JFrame {
 
     public myFrame(){
         add(rootPanel); // get the Layout from the designer
-
+        statusLabel.setText("Disconnected"); //Initially set the text to "Disconnected"
         //ActionListener for the "Read Serial" Button
         readSerialButton.addActionListener(new ActionListener() {
             @Override
@@ -71,6 +72,8 @@ public class myFrame extends JFrame {
                 output = new PrintWriter(chosenPort .getOutputStream() ); // Assign the output Steamer to the COM port
                 output.flush(); //flush the Port so it´ll be ready when we need it
 
+                String msg = comboBox1.getSelectedItem().toString() + "@" + baudRateBox.getSelectedItem().toString(); //prepare the status message(PORT@BAUDRATE)
+                statusLabel.setText(msg); //Set the text to the status message
                 //Handle button enabling
                 disconnectButton.setEnabled(true);
                 selectButton.setEnabled(false);
@@ -115,7 +118,7 @@ public class myFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 chosenPort.closePort(); //Close the Port
-
+                statusLabel.setText("Disconnected"); //set the Status Label back to "Disconnected"
                 //Handle button enabling
                 selectButton.setEnabled(true);
                 disconnectButton.setEnabled(false);

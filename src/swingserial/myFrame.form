@@ -98,6 +98,14 @@
           <text value="Stop Reading"/>
         </properties>
       </component>
+      <component id="2ad0b" class="javax.swing.JLabel" binding="statusLabel">
+        <constraints>
+          <grid row="2" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <text value=""/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>
