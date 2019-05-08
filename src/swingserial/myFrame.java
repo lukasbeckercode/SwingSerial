@@ -1,10 +1,11 @@
 package swingserial;
 
-/* TODO
-*Enable and disable Buttons to avoid opening the same Port twice: DONE
-* Add a Read-function: DONE
-* Add a stop reading method
-* design it better */
+/*This Software allows the user to communicate with any device that uses Serial Communication
+It Lets the user chose from 7 default baud rates or enter their own, it looks for available com ports.
+You can also send data to the port or receive data from the port
+
+By Lukas Becker, 2019
+*/
 
 //Imports Handled by IntelliJ
 
@@ -30,11 +31,13 @@ public class myFrame extends JFrame {
     private JTextArea textArea1;
     private JButton readDataButton;
     private JComboBox baudRateBox;
+    private JButton stopReadButton;
+    Timer timer;   //Global Var so we can start and stop it
 
     SerialPort[] portNames; //all available SerialPorts
     static SerialPort chosenPort; // the SerialPort we will work with
     PrintWriter output; // an output Streamer
-    int[] baudRates = {9600,19200,38400,57600,74880,115200,230400};
+    int[] baudRates = {9600,19200,38400,57600,74880,115200,230400}; // common baud rates in an int-Array
 
     public myFrame(){
         add(rootPanel); // get the Layout from the designer
@@ -44,7 +47,7 @@ public class myFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //Common baud rates
-               for(int i = 0; i<= 6 ; i++)
+               for(int i = 0; i<= baudRates.length -1 ; i++)
                {
                    baudRateBox.addItem(baudRates[i]); //Add all baudRates
                }
@@ -123,7 +126,7 @@ public class myFrame extends JFrame {
         readDataButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Timer timer = new Timer(); //create a Timer so we read constantly
+                    timer = new Timer(); //create a new timer every time, so we can start and stop multiple times
                     InputStream in = chosenPort.getInputStream(); //use an input stream
                     timer.scheduleAtFixedRate(new TimerTask() { //set up the timer
                         @Override
@@ -139,12 +142,24 @@ public class myFrame extends JFrame {
                         }
                     }, 0, 10); // repeat every 10 ms
 
-
+                    //Handle button enabling
+                    readDataButton.setEnabled(false);
+                    stopReadButton.setEnabled(true);
                 }
 
         });
 
+//Stop Read Button Method
+        stopReadButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                timer.cancel(); //Stop the Timer
 
+                //Handle button enabling
+                stopReadButton.setEnabled(false);
+                readDataButton.setEnabled(true);
+            }
+        });
     }
 
 
