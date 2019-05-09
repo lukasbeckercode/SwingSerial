@@ -33,14 +33,14 @@ public class myFrame extends JFrame {
     private JComboBox baudRateBox;
     private JButton stopReadButton;
     private JLabel statusLabel;
-    Timer timer;   //Global Var so we can start and stop it
+    private Timer timer;   //Global Var so we can start and stop it
 
-    SerialPort[] portNames; //all available SerialPorts
-    static SerialPort chosenPort; // the SerialPort we will work with
-    PrintWriter output; // an output Streamer
-    int[] baudRates = {9600,19200,38400,57600,74880,115200,230400}; // common baud rates in an int-Array
+    private SerialPort[] portNames; //all available SerialPorts
+    private static SerialPort chosenPort; // the SerialPort we will work with
+    private PrintWriter output; // an output Streamer
+    private int[] baudRates = {9600,19200,38400,57600,74880,115200,230400}; // common baud rates in an int-Array
 
-    public myFrame(){
+    myFrame(){
         add(rootPanel); // get the Layout from the designer
         statusLabel.setText("Disconnected"); //Initially set the text to "Disconnected"
         //ActionListener for the "Read Serial" Button
@@ -48,12 +48,13 @@ public class myFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 //Common baud rates
-               for(int i = 0; i<= baudRates.length -1 ; i++)
+               for(int i:baudRates )
                {
-                   baudRateBox.addItem(baudRates[i]); //Add all baudRates
+                   baudRateBox.addItem(i); //Add all baudRates
                }
 
                  portNames = SerialPort.getCommPorts(); //Look for all available COM ports
+                comboBox1.removeAllItems();//clear list beforehand
                 for(int i = 0; i < portNames.length; ++i) {
                     comboBox1.addItem(portNames[i].getSystemPortName()); //add all of them to our combo box
                 }
@@ -64,6 +65,7 @@ public class myFrame extends JFrame {
         selectButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
+
                 chosenPort = SerialPort.getCommPort(comboBox1.getSelectedItem().toString()); //set the COM port we will work with
                 int chosenBaud = ((int) baudRateBox.getSelectedItem()); // get the baudRate from the ComboBox
                 chosenPort.setBaudRate(chosenBaud); //Set the Baud Rate
@@ -85,13 +87,14 @@ public class myFrame extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (chosenPort.openPort()){  // check if the used port is open
-                    Thread thread = new Thread(){ //create a new Thread
+                    Thread thread = new Thread(()->{ //create a new Thread
 
 
-                        public void run() {
+
                             try {
                                 Thread.sleep(100L); //wait a bit
                             } catch (Exception var4) {
+                                statusLabel.setText("Error");
                             }
 
 
@@ -103,10 +106,11 @@ public class myFrame extends JFrame {
                                 try {
                                     Thread.sleep(100L); //wait a bit
                                 } catch (Exception var3) {
+                                    statusLabel.setText("Error");
                                 }
                             }
 
-                    };
+                    );
                     thread.start(); //run the thread
 
                 }
@@ -141,6 +145,7 @@ public class myFrame extends JFrame {
                                     textArea1.append(data); //Add the Variable to the TextArea (which is in a ScrollPanel)
                                 }
                             } catch (Exception ex) {
+                                statusLabel.setText("Error");
                             }
                         }
                     }, 0, 10); // repeat every 10 ms
