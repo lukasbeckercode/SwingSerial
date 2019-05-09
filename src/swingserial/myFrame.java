@@ -1,7 +1,7 @@
 package swingserial;
 
 /*This Software allows the user to communicate with any device that uses Serial Communication
-It Lets the user chose from 7 default baud rates or enter their own, it looks for available com ports.
+It lets the user chose from 7 default baud rates or enter their own, it looks for available com ports.
 You can also send data to the port or receive data from the port
 
 By Lukas Becker, 2019
