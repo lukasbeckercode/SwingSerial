@@ -75,8 +75,8 @@ public class myFrame extends JFrame {
                 String msg = comboBox1.getSelectedItem().toString() + "@" + baudRateBox.getSelectedItem().toString(); //prepare the status message(PORT@BAUDRATE)
                 statusLabel.setText(msg); //Set the text to the status message
                 //Handle button enabling
-                disconnectButton.setEnabled(true);
-                selectButton.setEnabled(false);
+                disconnectButton.setEnabled(!disconnectButton.isEnabled());
+                selectButton.setEnabled(!selectButton.isEnabled());
             }
         });
 
@@ -120,8 +120,8 @@ public class myFrame extends JFrame {
                 chosenPort.closePort(); //Close the Port
                 statusLabel.setText("Disconnected"); //set the Status Label back to "Disconnected"
                 //Handle button enabling
-                selectButton.setEnabled(true);
-                disconnectButton.setEnabled(false);
+                selectButton.setEnabled(!selectButton.isEnabled());
+                disconnectButton.setEnabled(!disconnectButton.isEnabled());
             }
         });
 
@@ -146,8 +146,8 @@ public class myFrame extends JFrame {
                     }, 0, 10); // repeat every 10 ms
 
                     //Handle button enabling
-                    readDataButton.setEnabled(false);
-                    stopReadButton.setEnabled(true);
+                    readDataButton.setEnabled(!readDataButton.isEnabled());
+                    stopReadButton.setEnabled(!stopReadButton.isEnabled());
                 }
 
         });
@@ -159,8 +159,8 @@ public class myFrame extends JFrame {
                 timer.cancel(); //Stop the Timer
 
                 //Handle button enabling
-                stopReadButton.setEnabled(false);
-                readDataButton.setEnabled(true);
+                readDataButton.setEnabled(!readDataButton.isEnabled());
+                stopReadButton.setEnabled(!stopReadButton.isEnabled());
             }
         });
     }
