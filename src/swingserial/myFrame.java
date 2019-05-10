@@ -12,6 +12,7 @@ By Lukas Becker, 2019
 import javax.swing.*;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Objects;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -36,7 +37,7 @@ public class myFrame extends JFrame {
     private SerialPort[] portNames; //all available SerialPorts
     private static SerialPort chosenPort; // the SerialPort we will work with
     private PrintWriter output; // an output Streamer
-    private int[] baudRates = {9600,19200,38400,57600,74880,115200,230400}; // common baud rates in an int-Array
+    private final int[] baudRates = {9600,19200,38400,57600,74880,115200,230400}; // common baud rates in an int-Array
 
     myFrame(){
         add(rootPanel); // get the Layout from the designer
@@ -59,7 +60,11 @@ public class myFrame extends JFrame {
         //ActionListener for the "Select" Button
         selectButton.addActionListener(e -> {
 
-            chosenPort = SerialPort.getCommPort(comboBox1.getSelectedItem().toString()); //set the COM port we will work with
+          String  chosePortString = Objects.requireNonNull(comboBox1.getSelectedItem()).toString();
+
+               chosenPort = SerialPort.getCommPort(chosePortString); //set the COM port we will work with
+
+
 
             int chosenBaud = ((int) baudRateBox.getSelectedItem()); // get the baudRate from the ComboBox
             chosenPort.setBaudRate(chosenBaud); //Set the Baud Rate
@@ -68,7 +73,7 @@ public class myFrame extends JFrame {
             output = new PrintWriter(chosenPort .getOutputStream() ); // Assign the output Steamer to the COM port
             output.flush(); //flush the Port so it´ll be ready when we need it
 
-            String msg = comboBox1.getSelectedItem().toString() + "@" + baudRateBox.getSelectedItem().toString(); //prepare the status message(PORT@BAUDRATE)
+            String msg = comboBox1.getSelectedItem().toString() + "@" + Objects.requireNonNull(baudRateBox.getSelectedItem()).toString(); //prepare the status message(PORT@BAUDRATE)
             statusLabel.setText(msg); //Set the text to the status message
             //Handle button enabling
             disconnectButton.setEnabled(!disconnectButton.isEnabled());
